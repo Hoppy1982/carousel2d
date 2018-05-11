@@ -189,15 +189,18 @@ function decVert() {
 
 
 function populateCarouselColumns() {
-  carouselVisibleItems[0].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].bgColor
-  carouselVisibleItems[1].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.left].bgColor
-  carouselVisibleItems[2].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.center].bgColor
-  carouselVisibleItems[3].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.right].bgColor
-  carouselVisibleItems[4].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.righter].bgColor
+  let i = 0
+  for(let prop in CAROUSEL_DATA[visibleHorizontalIndexes]) {
+    carouselVisibleItems[i].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes[prop]].bgColor
+    i++
+  }
 }
 
 
 function populateCarouselCells() {
+  
+
+
   lefterColumnNavItems[1].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItem[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].up].bgColor
   lefterColumnNavItems[2].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItem[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].center].bgColor
   lefterColumnNavItems[3].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItem[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].down].bgColor
