@@ -1,0 +1,24 @@
+initialize state
+create initial empty layout
+render
+on button press: transitions
+                 render:
+                         removeNavItems
+                         removeCarouselItems
+                         makeCarouselItems
+                         makeNavItems
+                 updateCarouselState
+
+refresh
+populateCarouselItems
+populateNavItems
+left
+right
+up
+down
+decHoriz
+incHoriz
+decVert
+incVert
+killAndRemakeCarouselItems
+killAndRemakeNavItems
