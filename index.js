@@ -236,15 +236,29 @@ function decVert() {
 
 
 function populateCarouselColumns() {
-  let i = 0
-  for(let prop in CAROUSEL_DATA[visibleHorizontalIndexes]) {
-    carouselVisibleItems[i].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes[prop]].bgColor
-    i++
+  for(i = 0; i < CAROUSEL_COLS; i++) {
+    let x = selectedCol + i + 3
+    while(x >= CAROUSEL_DATA.length) {x = x - CAROUSEL_DATA.length}
+
+    carouselVisibleItems[CAROUSEL_COLS - 1 - i].style.backgroundColor = CAROUSEL_DATA[x].bgColor
   }
 }
 
 
 function populateCarouselCells() {
+  for(let i = 0; i < CAROUSEL_COLS; i++) {
+    let x = selectedCol + i + 3
+    while(x >= CAROUSEL_DATA.length) {x = x - CAROUSEL_DATA.length}
+
+    for(let j = 0; j < CAROUSEL_ROWS; j++) {
+      let y = selectedRowInCols[x] + j
+      while(y >= CAROUSEL_DATA[x].navItems.length) {y = y - CAROUSEL_DATA[x].navItems.length}
+
+      carouselElements[i][j].style.backgroundColor = CAROUSEL_DATA[x].navItems[y].bgColor
+    }
+  }
+
+/*
   lefterColumnNavItems[1].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].up].bgColor
   lefterColumnNavItems[2].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].center].bgColor
   lefterColumnNavItems[3].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].down].bgColor
@@ -296,4 +310,5 @@ function populateCarouselCells() {
   righterColumnNavItems[1].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.righter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.righter].up].text
   righterColumnNavItems[2].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.righter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.righter].center].text
   righterColumnNavItems[3].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.righter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.righter].down].text
+  */
 }

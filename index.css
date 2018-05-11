@@ -3,8 +3,8 @@
 }
 
 #carouselContainer {
-  width: 300px;
-  height: 330px;
+  width: 700px;
+  height: 630px;
   border: solid black 2px;
   overflow: hidden;
   background-color: lightgrey;
