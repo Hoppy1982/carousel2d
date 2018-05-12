@@ -33,10 +33,20 @@ const CAROUSEL_DATA = [
     {text: 'four c', bgColor: 'blue'},
     {text: 'four d', bgColor: 'orange'},
     {text: 'four e', bgColor: 'purple'}
+  ]},
+  {text: 'FIVE', bgColor: 'white', navItems: [
+    {text: 'five a', bgColor: 'black'},
+    {text: 'five b', bgColor: 'white'},
+    {text: 'five c', bgColor: 'black'},
+    {text: 'five d', bgColor: 'white'},
+    {text: 'five e', bgColor: 'black'},
+    {text: 'five f', bgColor: 'red'}
   ]}
 ]
 const CAROUSEL_COLS = 5
 const CAROUSEL_ROWS = 5
+const CENTER_COL = 2
+const CENTER_ROW = 2
 
 let carouselContainer = document.getElementById('carouselContainer')
 let carouselVisibleItems
@@ -70,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
   for(let i = 0; i < CAROUSEL_COLS; i++) {
     carouselElements.push([])
     for(let j = 0; j < CAROUSEL_ROWS; j++) {
-      carouselElements[i].push(document.querySelectorAll(`.carouselItem:nth-of-type(${i}n) .navItem`)[j])
+      carouselElements[i].push(document.querySelectorAll(`.carouselItem:nth-of-type(${1 + i}n) .navItem`)[j])
     }
   }
 
@@ -88,9 +98,6 @@ function render() {
   populateCarouselColumns()
   populateCarouselCells()
   updateCarouselState()
-  console.log(carouselElements)
-  console.log(`selectedCol: ${selectedCol}`)
-  console.log(`selectedRowInCols ${selectedRowInCols}`)
 }
 
 
@@ -115,8 +122,8 @@ function right() {
 
 
 function up() {
-  for(let i = 0; i < centerColumnNavItems.length; i++) {
-    centerColumnNavItems[i].classList.add('movedUp')
+  for(let i = 0; i < carouselElements[CENTER_COL].length; i++) {
+    carouselElements[CENTER_COL][i].classList.add('movedUp')
   }
 
   incVert()
@@ -125,8 +132,8 @@ function up() {
 
 
 function down() {
-  for(let i = 0; i < centerColumnNavItems.length; i++) {
-    centerColumnNavItems[i].classList.add('movedDown')
+  for(let i = 0; i < carouselElements[CENTER_COL].length; i++) {
+    carouselElements[CENTER_COL][i].classList.add('movedDown')
   }
 
   decVert()
@@ -174,15 +181,8 @@ function makeCarouselCells() {
 
 
 function updateCarouselState() {
-  //old
   carouselVisibleItems = document.getElementsByClassName('carouselItem')
-  lefterColumnNavItems = document.querySelectorAll('.carouselItem:nth-of-type(1n) .navItem')
-  leftColumnNavItems = document.querySelectorAll('.carouselItem:nth-of-type(2n) .navItem')
-  centerColumnNavItems = document.querySelectorAll('.carouselItem:nth-of-type(3n) .navItem')
-  rightColumnNavItems = document.querySelectorAll('.carouselItem:nth-of-type(4n) .navItem')
-  righterColumnNavItems = document.querySelectorAll('.carouselItem:nth-of-type(5n) .navItem')
 
-  //new
   for(let i = 0; i < CAROUSEL_COLS; i++) {
     for(let j = 0; j < CAROUSEL_ROWS; j++) {
       carouselElements[i][j] = document.querySelectorAll(`.carouselItem:nth-of-type(${1 + i}n) .navItem`)[j]
@@ -192,123 +192,44 @@ function updateCarouselState() {
 
 
 function incHoriz() {
-  //old
-  for(let prop in visibleHorizontalIndexes) {
-    visibleHorizontalIndexes[prop] = visibleHorizontalIndexes[prop] === CAROUSEL_DATA.length - 1 ? 0 : visibleHorizontalIndexes[prop] + 1
-  }
-
-  //new
   selectedCol = selectedCol === CAROUSEL_DATA.length - 1 ? 0 : selectedCol + 1
 }
 
 
 function decHoriz() {
-  //old
-  for(let prop in visibleHorizontalIndexes) {
-    visibleHorizontalIndexes[prop] = visibleHorizontalIndexes[prop] === 0 ? CAROUSEL_DATA.length - 1 : visibleHorizontalIndexes[prop] - 1
-  }
-
-  //new
   selectedCol = selectedCol === 0 ? CAROUSEL_DATA.length - 1 : selectedCol - 1
 }
 
 
 function incVert() {
-  //old
-  for(let prop in visibleVerticalIndexes[visibleHorizontalIndexes.center]) {
-    visibleVerticalIndexes[visibleHorizontalIndexes.center][prop] = visibleVerticalIndexes[visibleHorizontalIndexes.center][prop] === CAROUSEL_DATA[2].navItems.length - 1 ? 0 : visibleVerticalIndexes[visibleHorizontalIndexes.center][prop] + 1
-  }
-
-  //new
   selectedRowInCols[selectedCol] = selectedRowInCols[selectedCol] === CAROUSEL_DATA[selectedCol].navItems.length - 1 ? 0 : selectedRowInCols[selectedCol] + 1
 }
 
 
 function decVert() {
-  //old
-  for(let prop in visibleVerticalIndexes[visibleHorizontalIndexes.center]) {
-    visibleVerticalIndexes[visibleHorizontalIndexes.center][prop] = visibleVerticalIndexes[visibleHorizontalIndexes.center][prop] === 0 ? CAROUSEL_DATA[2].navItems.length - 1 : visibleVerticalIndexes[visibleHorizontalIndexes.center][prop] - 1
-  }
-
-  //new
   selectedRowInCols[selectedCol] = selectedRowInCols[selectedCol] === 0 ? CAROUSEL_DATA[selectedCol].navItems.length - 1 : selectedRowInCols[selectedCol] - 1
 }
 
 
 function populateCarouselColumns() {
   for(i = 0; i < CAROUSEL_COLS; i++) {
-    let x = selectedCol + i + 3
+    let x = selectedCol + i + CAROUSEL_DATA.length - 2
     while(x >= CAROUSEL_DATA.length) {x = x - CAROUSEL_DATA.length}
 
     carouselVisibleItems[CAROUSEL_COLS - 1 - i].style.backgroundColor = CAROUSEL_DATA[x].bgColor
   }
 }
 
-
 function populateCarouselCells() {
-  for(let i = 0; i < CAROUSEL_COLS; i++) {
-    let x = selectedCol + i + 3
+  for(i = 0; i < CAROUSEL_COLS; i++) {
+    let x = selectedCol + i + CAROUSEL_DATA.length - 2
     while(x >= CAROUSEL_DATA.length) {x = x - CAROUSEL_DATA.length}
 
     for(let j = 0; j < CAROUSEL_ROWS; j++) {
       let y = selectedRowInCols[x] + j
       while(y >= CAROUSEL_DATA[x].navItems.length) {y = y - CAROUSEL_DATA[x].navItems.length}
 
-      carouselElements[i][j].style.backgroundColor = CAROUSEL_DATA[x].navItems[y].bgColor
+      carouselElements[CAROUSEL_COLS - 1 - i][j].style.backgroundColor = CAROUSEL_DATA[x].navItems[y].bgColor
     }
   }
-
-/*
-  lefterColumnNavItems[1].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].up].bgColor
-  lefterColumnNavItems[2].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].center].bgColor
-  lefterColumnNavItems[3].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].down].bgColor
-
-  lefterColumnNavItems[1].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].up].text
-  lefterColumnNavItems[2].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].center].text
-  lefterColumnNavItems[3].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.lefter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.lefter].down].text
-
-
-
-  leftColumnNavItems[1].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.left].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.left].up].bgColor
-  leftColumnNavItems[2].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.left].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.left].center].bgColor
-  leftColumnNavItems[3].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.left].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.left].down].bgColor
-
-  leftColumnNavItems[1].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.left].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.left].up].text
-  leftColumnNavItems[2].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.left].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.left].center].text
-  leftColumnNavItems[3].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.left].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.left].down].text
-
-
-
-  centerColumnNavItems[0].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.center].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.center].upper].bgColor
-  centerColumnNavItems[1].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.center].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.center].up].bgColor
-  centerColumnNavItems[2].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.center].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.center].center].bgColor
-  centerColumnNavItems[3].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.center].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.center].down].bgColor
-  centerColumnNavItems[4].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.center].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.center].downer].bgColor
-
-  centerColumnNavItems[0].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.center].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.center].upper].text
-  centerColumnNavItems[1].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.center].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.center].up].text
-  centerColumnNavItems[2].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.center].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.center].center].text
-  centerColumnNavItems[3].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.center].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.center].down].text
-  centerColumnNavItems[4].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.center].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.center].downer].text
-
-
-
-  rightColumnNavItems[1].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.right].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.right].up].bgColor
-  rightColumnNavItems[2].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.right].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.right].center].bgColor
-  rightColumnNavItems[3].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.right].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.right].down].bgColor
-
-  rightColumnNavItems[1].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.right].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.right].up].text
-  rightColumnNavItems[2].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.right].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.right].center].text
-  rightColumnNavItems[3].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.right].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.right].down].text
-
-
-
-  righterColumnNavItems[1].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.righter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.righter].up].bgColor
-  righterColumnNavItems[2].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.righter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.righter].center].bgColor
-  righterColumnNavItems[3].style.backgroundColor = CAROUSEL_DATA[visibleHorizontalIndexes.righter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.righter].down].bgColor
-
-  righterColumnNavItems[1].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.righter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.righter].up].text
-  righterColumnNavItems[2].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.righter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.righter].center].text
-  righterColumnNavItems[3].innerHTML = CAROUSEL_DATA[visibleHorizontalIndexes.righter].navItems[visibleVerticalIndexes[visibleHorizontalIndexes.righter].down].text
-  */
 }
